@@ -1,6 +1,5 @@
 import numpy as np
 import tensorflow as tf
-#import tensorflow_probability as tfp
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import scipy
@@ -143,7 +142,7 @@ th_range = np.array([500,750,1000,1250,1500,1750,2000,2250,2401])
 for j in [0,1,2,3,4,5,6,7,8,9]:
     for th_val in th_range:
         try:
-            foo = pickle.load(open(f"/scratch/zt1/project/jmtaylor-prj/user/rad/data/Schwinger/exp1/res_prune_{th_val}_{j}.pkl","rb") )
+            foo = pickle.load(open(f"**Your-Address**/res_prune_{th_val}_{j}.pkl","rb") )
         except (EOFError,OSError, IOError) as e:
             omega_init=np.random.rand(N_ion,N_ion).astype('float64')
             omega_tensor = tf.Variable(omega_init)
@@ -151,13 +150,13 @@ for j in [0,1,2,3,4,5,6,7,8,9]:
             opt.set_weights(0*np.array(opt.get_weights(),dtype='object'))
             res_temp_prune = optimize_and_prune(omega_tensor,0,thresh=th_val,init_epochs=10000,
                                                 fine_epochs = 20000)
-            f = open(f"/scratch/zt1/project/jmtaylor-prj/user/rad/data/Schwinger/exp1/res_prune_{th_val}_{j}.pkl","wb")
+            f = open(f"/**Your-Address**/res_prune_{th_val}_{j}.pkl","wb")
             pickle.dump(res_temp_prune,f)
             f.close()
 for j in range(10):
     for th_val in th_range:
         try:
-            foo = pickle.load(open(f"/scratch/zt1/project/jmtaylor-prj/user/rad/data/Schwinger/exp2/res_rand_{th_val}_{j}.pkl","rb") )
+            foo = pickle.load(open(f"/**Your-Address**/res_rand_{th_val}_{j}.pkl","rb") )
         except (EOFError,OSError, IOError) as e:
             
             omega_init=np.random.rand(N_ion,N_ion).astype('float64')
@@ -172,7 +171,7 @@ for j in range(10):
 
             res_temp_rand = optimize_and_prune(omega_tensor,alpha=1,thresh=th_val,init_epochs=0,
                                                 fine_epochs = 3000,custom_mask=rand_mask)    
-            f = open(f"/scratch/zt1/project/jmtaylor-prj/user/rad/data/Schwinger/exp2/res_rand_{th_val}_{j}.pkl","wb")
+            f = open(f"/**Your-Address**/res_rand_{th_val}_{j}.pkl","wb")
             pickle.dump(res_temp_rand,f)
             f.close()
 
