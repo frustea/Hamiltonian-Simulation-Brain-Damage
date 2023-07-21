@@ -1,6 +1,9 @@
+### Utitly function for simulating the traped ions in presence of electric potential 
+
 import numpy as np
 from scipy.optimize import minimize
 import matplotlib.pyplot as plt 
+
 
 class normal_modes:
     # init method or constructor   
@@ -12,16 +15,16 @@ class normal_modes:
         self.prefac=prefac  
         self.mass=mass
         
-    def potential(self,x):
+    def potential(self,x): ### External electric potential function 
         harmonic_term = np.sum(x**2)
         coulomb_term = np.sum(1/np.abs(x[:,None]-x[None,:])[~np.eye(len(x),dtype=bool)])
         return harmonic_term+coulomb_term
     
-    def find_eq_pos(self):
+    def find_eq_pos(self): ## finding the equilibrium positions of ions
         temp_sol = minimize(self.potential,np.random.rand(self.num_ions))
         return np.sort(temp_sol.x)
     
-    def find_axial(self):
+    def find_axial(self): ## axial modes 
         A_mat = np.zeros((self.num_ions,self.num_ions))
         x_vec = np.sort(self.find_eq_pos())
         u_vec = x_vec/np.power(2*self.prefac/(self.mass*self.omega_a**2),1/3)
