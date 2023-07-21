@@ -13,7 +13,7 @@ Operating a quantum simulator entails an essential phase: the engineering of the
 
 You need to have installed the library Tensorflow before running this project. The whole code is wirtein in python.
 
-## Installation
+## Method
 The physical simulation of phono vibrations in the trapped ions are available in
 ```bash
 # utility file 
