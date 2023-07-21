@@ -1,3 +1,5 @@
+#imporitng required libraries 
+
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -8,8 +10,10 @@ from trapped_ions import normal_modes
 from scipy.optimize import minimize
 
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
-N_row=7
-N_col=7
+
+## Defining the simulation parameters 
+N_row=7 # size of an effective one or two-dimensional system
+N_col=7 
 hopp_amph=-1
 hopp_ampv=-1
 N_sites=N_row*N_col
@@ -20,6 +24,8 @@ omega_r=20
 mass=1
 l_fac=1
 prefac=0.1
+## Creating an instance of  the ion-trap system using the utility functions 
+
 ions_instance = normal_modes(N_ion,omega_a,omega_r,mass,l_fac,prefac) #num_ions, omega_a,omega_r,mass,l_fac,prefac
 freqs,vecs,A_mat = ions_instance.find_transverse() 
 etas = (vecs/np.sqrt(freqs))
@@ -28,7 +34,7 @@ Fijn = np.array([[[np.sum(vecs[i_val]*vecs[j_val]/(mus[n_val]**2-freqs**2))*(i_v
 
 
 
-## defining the interaction matrix, J, for the one dimensional Schwinger Model 
+## Defining the interaction matrix, J, for the one-dimensional Schwinger Model 
 
 j_target = np.zeros((N_sites,N_sites),'float64')
 for m in range(N_sites-2):
@@ -45,14 +51,17 @@ norm = np.linalg.norm(j_target)
 delta_mn = (mus[:,None]-freqs[None,:])
 Delta_mn = (mus[:,None]+freqs[None,:])
 
-
 t_list = np.linspace(0,2,10)
 I_tmn = np.array([-1j*((-1+np.exp(2j*np.pi*Delta_mn*t))/Delta_mn
                     -(-1+np.exp(-2j*np.pi*delta_mn*t))/delta_mn) for t in t_list])
 
+
+## Defining the cost function as norm-square. it can be normalized by the norm defined above as well
 def cost_j_tf(var):
     jmat_error = tf.reduce_sum(tf.square(j_target-tf.einsum('in,jn,ijn->ij',var,var,f_tensor)))
     return jmat_error
+
+## creating the J matrix for given set of omegas, and fixed mu, as defined above
 def j_from_omega(omega):
     return np.einsum('in,jn,ijn->ij',omega,omega,Fijn)
 
@@ -69,6 +78,9 @@ def cost_reg_tf(var):
 
 def hess_reg(j,l):
     return 2*np.einsum('tm,m->...',np.abs(I_tmn[:,:,l])**2,np.abs(etas[j,:])**2)/np.prod(I_tmn.shape)
+
+
+##  Hessian with direct calculation
 def hess_j(omega,k,m):
     hess_temp = sum((omega[j,m]*Fijn[k,j,m])**2 for j in range(N_sites))
     hess_temp+= sum((omega[i,m]*Fijn[i,k,m])**2 for i in range(N_sites))
@@ -81,6 +93,8 @@ def opt_step_fine(omega_in,mask,alpha):
     domega = t.gradient(current_loss, [omega_in])
     opt.apply_gradients(zip(domega,[omega_in]))
     return current_loss
+
+## Optimization pipeline 
 def optimize_and_prune(var,alpha,thresh=2000,init_epochs=20000,fine_epochs=10000,custom_mask=None):
     results = {}
     n_dims = var.shape[0]
@@ -137,9 +151,12 @@ opt = tf.keras.optimizers.Adam(0.003)
 omega_tensor_0 = np.random.rand(N_sites,N_sites).astype('float64')
 omega_tensor = tf.Variable(omega_tensor_0)#,constraint=lambda x: tf.clip_by_value(x, 0, np.infty))
 
+
+### Defing the range of parameters budgets  
 th_range = np.array([500,750,1000,1250,1500,1750,2000,2250,2401])
 
-for j in [0,1,2,3,4,5,6,7,8,9]:
+### Storing the optimization results 
+for j in range(9):
     for th_val in th_range:
         try:
             foo = pickle.load(open(f"**Your-Address**/res_prune_{th_val}_{j}.pkl","rb") )
