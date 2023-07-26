@@ -123,6 +123,16 @@ j_target=create_nn_hopping(L1=7, dim=2, bc='pbc',ty=1.,tx=1,phase=0.3)
 j_up=np.triu(j_target, k=0)
 j_full=(np.transpose(np.conjugate(j_up))+j_up)
 
+
+## Defining the interaction matrix, J, for the one-dimensional Schwinger Model 
+
+# j_target = np.zeros((N_sites,N_sites),'float64')
+# for m in range(N_sites-2):
+#     for n in range(m+1,N_sites-1):
+#         j_target[m,n] = (N_sites-(n+1))/N_sites
+# j_target = j_target + j_target.T
+
+
 #creates a Hamiltonian matrix
 # Initialization for trapped ions simulation
 N_row=7
