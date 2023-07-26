@@ -14,7 +14,7 @@ Operating a quantum simulator entails an essential phase: the engineering of the
 You need to have installed the library Tensorflow before running this project. The whole code is written in Python.
 
 ## Method
-The physical simulation of phono vibrations in the trapped ions is available in
+The physical simulation of phonon vibrations in the trapped ions is available in
 ```bash
 # utility file 
 trapped_ions.py
@@ -23,9 +23,19 @@ To see the model implementation and Optimal Brain Damage algorithm,
 ```bash
 /src/optimal_bain_damage.py
 ```
-contain the whole pipeline for the Schwinger model. For the Harper-Hofstadter model please check:
-```bash
-/utility/Harper_Hofstadter_Himltonian.py
-````
+
+## Getting Started
+
+1. Clone the repository: `git clone https://github.com/frustea/Hamiltonian-Simulation-Brain-Damage.git`
+2. Install dependencies: `pip install -r requirements.txt`
+3. `cd src' 
+4. Run a simulation: `python optimal_brain_damge.py`
+## Contributing
+
+Contributions to extend the model and analyses are welcome! Please open an issue or PR.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
  
  
